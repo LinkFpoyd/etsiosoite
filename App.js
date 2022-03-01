@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import * as Location from 'expo-location';
 
 export default function App() {
 
@@ -13,7 +12,7 @@ export default function App() {
     longitudeDelta: 0.0221});
 
 
-  const searchLocation = () => {
+  /* const searchLocation = () => {
     fetch(`http://www.mapquestapi.com/geocoding/v1/address?key=ze9mXWJ57Byb8Vlq7dbzo3a7SxGhVm6L&location=${search}`)
     .then(response => response.json())
     .then(data => setMarker(data.results))
@@ -28,6 +27,23 @@ export default function App() {
       latitudeDelta: 0.0322, longitudeDelta: 0.0221}
 
     setCoordinates(coordinate)
+  } */
+
+  const searchLocation = async () => {
+    try{
+      const response = await fetch(`http://www.mapquestapi.com/geocoding/v1/address?key=ze9mXWJ57Byb8Vlq7dbzo3a7SxGhVm6L&location=${search}`);
+      const data = await response.json();
+
+      let coordinate = {latitude: data.results[0].locations[0].latLng.lat,
+        longitude: data.results[0].locations[0].latLng.lng,
+        latitudeDelta: 0.0322, longitudeDelta: 0.0221}
+  
+      setCoordinates(coordinate)
+
+
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
